@@ -3,6 +3,7 @@ var React = require('react')
 var DataFrame = require('dataframe')
 var Emitter = require('wildemitter')
 
+
 var partial = require('./lib/partial')
 var download = require('./lib/download')
 
@@ -44,11 +45,18 @@ module.exports = React.createClass({
 
   componentWillMount: function() {
     if (this.props.defaultStyles) loadStyles()
-
     this.dataFrame = DataFrame({
       rows: this.props.rows,
       dimensions: this.props.dimensions,
       reduce: this.props.reduce
+    })
+  },
+
+  componentWillReceiveProps(nextProps) {
+    this.dataFrame = DataFrame({
+      rows: nextProps.rows,
+      dimensions: nextProps.dimensions,
+      reduce: nextProps.reduce
     })
   },
 
@@ -144,10 +152,10 @@ module.exports = React.createClass({
       var d =  _.find(self.props.dimensions, function(col) {
         return col.title === title
       })
-
       columns.push({
         type: 'dimension', title: d.title, value: d.value,
-        className: d.className, template: d.template
+        className: d.className, template: d.template,
+        headerComponent: d.headerComponent,
       })
     })
 
@@ -293,7 +301,6 @@ module.exports = React.createClass({
     }
 
     var results = this.dataFrame.calculate(calcOpts)
-
     var paginatedResults = this.paginate(results)
 
     var tBody = this.renderTableBody(columns, paginatedResults.rows)
@@ -331,13 +338,18 @@ module.exports = React.createClass({
               </span>
             )
 
+            let filterComponent = '';
+            if (typeof(col.headerComponent) === 'function') {
+              filterComponent = col.headerComponent(col);
+            }
+
             return (
               <th className={className}
-                  onClick={partial(self.setSort, col.title)}
                   style={{cursor: 'pointer'}} >
 
                 {hide}
-                {col.title}
+                <span className='headerFilter'>{filterComponent}</span>
+                <span onClick={partial(self.setSort, col.title)}>{col.title}</span>
               </th>
             )
           })}
