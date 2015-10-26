@@ -52,7 +52,7 @@ module.exports = React.createClass({
     })
   },
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps: function(nextProps) {
     this.dataFrame = DataFrame({
       rows: nextProps.rows,
       dimensions: nextProps.dimensions,
@@ -338,7 +338,7 @@ module.exports = React.createClass({
               </span>
             )
 
-            let filterComponent = '';
+            var filterComponent = '';
             if (typeof(col.headerComponent) === 'function') {
               filterComponent = col.headerComponent(col);
             }
