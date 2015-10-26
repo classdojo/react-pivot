@@ -207,10 +207,6 @@ module.exports = React.createClass({
         {this.renderDimensions()}
         {this.renderColumnControl()}
 
-        <div className="reactPivot-csvExport">
-          <button onClick={this.downloadCSV}>Export CSV</button>
-        </div>
-
         {
           this.state.solo ? (
             <div style={{clear: 'both'}} className='reactPivot-soloDisplay'>
@@ -400,7 +396,7 @@ module.exports = React.createClass({
              onClick={partial(this.setSolo, {
                 title: col.title,
                 value: val
-              })}>solo</a>
+              })}>filter</a>
         </span>
       )
     }
